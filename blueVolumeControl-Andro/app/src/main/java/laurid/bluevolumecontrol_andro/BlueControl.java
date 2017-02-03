@@ -49,17 +49,25 @@ public class BlueControl extends AppCompatActivity {
     private void init() {
         myBlue = BluetoothAdapter.getDefaultAdapter();
         pairedDevices = new ArrayList <String>();
+        filter = new IntentFilter((BluetoothDevice.ACTION_FOUND));
         receiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                String actions = intent.getAction();
-                if(BluetoothDevice.ACTION_FOUND.equals(actions)){
+                String action = intent.getAction();
+                if(BluetoothDevice.ACTION_FOUND.equals(action)){
                     BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                     listAdapter.add(device.getName()+"\n"+device.getAddress());
                 }
 
             }
         };
+        registerReceiver(receiver,filter);
+        filter = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_STARTED);
+        registerReceiver(receiver,filter);
+        filter = new IntentFilter(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
+        registerReceiver(receiver,filter);
+        filter = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
+        registerReceiver(receiver,filter);
     }
 
     @Override
