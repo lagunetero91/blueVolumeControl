@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -16,7 +18,8 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Set;
 
-public class BlueControl extends AppCompatActivity {
+public class BlueControl extends AppCompatActivity implements AdapterView.OnItemClickListener {
+    ListView listView;
     BluetoothAdapter myBlue;
     Set<BluetoothDevice> devices;
     ArrayAdapter<String> listAdapter;
@@ -35,7 +38,13 @@ public class BlueControl extends AppCompatActivity {
                 turnOnBluetooth();
             }
             getDevices();
+            startDiscovery();
         }
+    }
+
+    private void startDiscovery() {
+        myBlue.cancelDiscovery();
+        myBlue.startDiscovery();
     }
 
     private void turnOnBluetooth() {
@@ -54,7 +63,7 @@ public class BlueControl extends AppCompatActivity {
 
     private void init() {
         myBlue = BluetoothAdapter.getDefaultAdapter();
-
+        listView.setOnClickListener(this.);
         pairedDevices = new ArrayList <String>();
         filter = new IntentFilter((BluetoothDevice.ACTION_FOUND));
         receiver = new BroadcastReceiver() {
@@ -100,5 +109,10 @@ public class BlueControl extends AppCompatActivity {
         if (resultCode == RESULT_CANCELED) {
             Toast.makeText(getApplicationContext(),"Encienda el Bluetooth",Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
     }
 }
