@@ -9,6 +9,8 @@ import android.content.IntentFilter;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -30,11 +32,15 @@ public class BlueControl extends AppCompatActivity {
             finish();
         }else{
             if(!myBlue.isEnabled()){
-                Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                startActivityForResult(intent,1);
+                turnOnBluetooth();
             }
             getDevices();
         }
+    }
+
+    private void turnOnBluetooth() {
+        Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+        startActivityForResult(intent,1);
     }
 
     private void getDevices() {
@@ -48,6 +54,7 @@ public class BlueControl extends AppCompatActivity {
 
     private void init() {
         myBlue = BluetoothAdapter.getDefaultAdapter();
+
         pairedDevices = new ArrayList <String>();
         filter = new IntentFilter((BluetoothDevice.ACTION_FOUND));
         receiver = new BroadcastReceiver() {
@@ -57,6 +64,17 @@ public class BlueControl extends AppCompatActivity {
                 if(BluetoothDevice.ACTION_FOUND.equals(action)){
                     BluetoothDevice device = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
                     listAdapter.add(device.getName()+"\n"+device.getAddress());
+                }
+                else if(BluetoothAdapter.ACTION_DISCOVERY_STARTED.equals(action)){
+
+                }
+                else if(BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)){
+
+                }
+                else if(BluetoothAdapter.ACTION_STATE_CHANGED.equals(action)){
+                    if(myBlue.getState()== myBlue.STATE_OFF){
+                        turnOnBluetooth();
+                    }
                 }
 
             }
@@ -68,6 +86,12 @@ public class BlueControl extends AppCompatActivity {
         registerReceiver(receiver,filter);
         filter = new IntentFilter(BluetoothAdapter.ACTION_STATE_CHANGED);
         registerReceiver(receiver,filter);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(receiver);
     }
 
     @Override
