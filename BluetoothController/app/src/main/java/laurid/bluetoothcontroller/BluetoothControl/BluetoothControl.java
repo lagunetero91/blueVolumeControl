@@ -9,6 +9,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 public class BluetoothControl extends AppCompatActivity{
@@ -53,15 +55,19 @@ public class BluetoothControl extends AppCompatActivity{
     }
 
     // Devices Bounded.
-    public ArrayAdapter<String> getBoundedDevices(){
-        ArrayAdapter<String> adapters = null;
-        devices =blueAdapter.getBondedDevices();
-        if(devices.size()>0) {
-            for (BluetoothDevice device : devices) {
-                assert adapters != null;
-                adapters.add(device.getName());
+    public List<String> getDevices(){
+        List<String> adapters = new ArrayList<>();
+            devices = blueAdapter.getBondedDevices();
+            if(devices != null) {                   //TODO: Arreglar esto.
+                if (devices.size() > 0) {
+                    for (BluetoothDevice device : devices) {
+                        adapters.add(device.getName());
+                        Toast toast = Toast.makeText(this, device.getName(), Toast.LENGTH_SHORT);
+                        toast.setGravity(Gravity.CENTER, 0, 0);
+                        toast.show();
+                    }
+                }
             }
-        }
        return adapters;
     }
 
