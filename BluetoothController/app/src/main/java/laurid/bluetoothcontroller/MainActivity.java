@@ -12,20 +12,20 @@ import android.widget.Toast;
 
 import laurid.bluetoothcontroller.BluetoothControl.BluetoothControl;
 
-import static laurid.bluetoothcontroller.R.id.myList;
 
 
 public class MainActivity extends AppCompatActivity {
     BluetoothControl bluetoothcontrol = null;
     private ListView listView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        bluetoothcontrol = new BluetoothControl();
     }
 
      public void activateButtonAction(View v){
-         bluetoothcontrol = new BluetoothControl();
          bluetoothcontrol.turnOn();
          Toast toast = Toast.makeText(this,"Bluetooth habilitado.",Toast.LENGTH_SHORT);
          toast.setGravity(Gravity.CENTER,0,0);
@@ -41,18 +41,15 @@ public class MainActivity extends AppCompatActivity {
          }
      }
 
+     // Looking for Bluetooth Devices in the zone and show it in a list.
      public void lookingForDevices(View v){
          if(bluetoothcontrol!=null){
-             ArrayAdapter <String> toList= new ArrayAdapter<String>(this,R.layout.activity_main);
-             listView = (ListView) findViewById(R.id.myList);
-             Toast toast = Toast.makeText(this, "Antes de .", Toast.LENGTH_SHORT);
-             toast.setGravity(Gravity.CENTER, 0, 0);
-             toast.show();
-             listView.setAdapter(new ArrayAdapter<String>(this,R.layout.activity_main,bluetoothcontrol.getDevices()));
-            // myList(new ArrayAdapter<String>(this,R.layout.myList,bluetoothcontrol.getBoundedDevices()));
-             toast = Toast.makeText(this, "Despues de .", Toast.LENGTH_SHORT);
-             toast.setGravity(Gravity.CENTER, 0, 0);
-             toast.show();
+             setContentView(R.layout.activity_main);
+             ListView lista;
+             ArrayAdapter <String> toList;
+             lista = (ListView) findViewById(R.id.myList);
+             toList = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,bluetoothcontrol.getDevices());
+             lista.setAdapter(toList);
          }
      }
 

@@ -58,13 +58,11 @@ public class BluetoothControl extends AppCompatActivity{
     public List<String> getDevices(){
         List<String> adapters = new ArrayList<>();
             devices = blueAdapter.getBondedDevices();
-            if(devices != null) {                   //TODO: Arreglar esto.
+            if(devices != null) {
                 if (devices.size() > 0) {
                     for (BluetoothDevice device : devices) {
-                        adapters.add(device.getName());
-                        Toast toast = Toast.makeText(this, device.getName(), Toast.LENGTH_SHORT);
-                        toast.setGravity(Gravity.CENTER, 0, 0);
-                        toast.show();
+                        String aux = device.getName();
+                        adapters.add(aux);
                     }
                 }
             }
